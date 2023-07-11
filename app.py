@@ -1,5 +1,3 @@
-pip install -r requirements.txt
-
 import openai
 import requests
 import streamlit as st
