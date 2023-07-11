@@ -29,8 +29,6 @@ def analyze_bitcoin_data(data):
 def plot_bitcoin_data(data):
     fig, ax = plt.subplots(figsize=(10,5))
     ax.plot(data['prices'], label='Price')
-    ax.plot(data['market_caps'], label='Market Cap')
-    ax.plot(data['total_volumes'], label='Total Volume')
     ax.legend()
     ax.set_title('Bitcoin Data for the Last 7 Days')
     ax.set_xlabel('Time')
