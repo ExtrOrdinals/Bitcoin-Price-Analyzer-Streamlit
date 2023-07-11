@@ -17,7 +17,7 @@ def analyze_bitcoin_data(data):
     Please provide a detailed technical analysis of Bitcoin based on this data. Include information on price overview, moving averages, relative strength index (RSI), moving average convergence divergence (MACD), and advice and suggestions. Should we buy or sell? Please explain in a way that a beginner can understand.
     """
     response = openai.ChatCompletion.create(
-        model="gpt-4",
+        model="gpt-3.5-32k",
         messages=[
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": prompt}
