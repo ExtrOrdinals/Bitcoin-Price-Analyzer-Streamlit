@@ -46,6 +46,7 @@ if st.button('Analyze'):
     with st.spinner('Getting Bitcoin data...'):
         data = get_bitcoin_data()
         st.success('Done!')
+        st.write('Raw Data: ' + data)
     with st.spinner('Analyzing Bitcoin data...'):
         analysis = analyze_bitcoin_data(data)
         st.text_area('Analysis', analysis, height=500)
