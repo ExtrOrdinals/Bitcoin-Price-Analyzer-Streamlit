@@ -36,7 +36,7 @@ def plot_bitcoin_data(data):
     plt.xlabel('Time')
     plt.ylabel('Value')
     plt.grid(True)
-    plt.show()
+    st.pyplot()  
 
 st.title('Bitcoin Price Analyzer')
 st.write('This app uses AI to analyze Bitcoin prices and other metrics.')
