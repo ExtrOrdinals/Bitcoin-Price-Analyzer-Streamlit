@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 def get_bitcoin_data():
-    url = "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=14"
+    url = "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=7"
     response = requests.get(url)
     data = response.json()
 
@@ -20,7 +20,7 @@ def get_bitcoin_data():
 
 def analyze_bitcoin_data(data):
     prompt = f"""
-    You are an expert crypto trader with more than 10 years of experience. Here is the Bitcoin data for the last 14 days: 
+    You are an expert crypto trader with more than 10 years of experience. Here is the Bitcoin data for the last 7 days: 
     {data} 
     Please provide a detailed technical analysis of Bitcoin based on this data. Include information on price overview, moving averages, relative strength index (RSI), moving average convergence divergence (MACD), and advice and suggestions. Even if you don't have enough info for the anser, get as close as possible. Should we buy or sell? Please explain in a way that a beginner can understand.
     """
