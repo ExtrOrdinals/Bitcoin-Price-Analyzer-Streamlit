@@ -27,16 +27,16 @@ def analyze_bitcoin_data(data):
     return response.choices[0].message['content']
 
 def plot_bitcoin_data(data):
-    plt.figure(figsize=(10,5))
-    plt.plot(data['prices'], label='Price')
-    plt.plot(data['market_caps'], label='Market Cap')
-    plt.plot(data['total_volumes'], label='Total Volume')
-    plt.legend()
-    plt.title('Bitcoin Data for the Last 7 Days')
-    plt.xlabel('Time')
-    plt.ylabel('Value')
-    plt.grid(True)
-    st.pyplot()  
+    fig, ax = plt.subplots(figsize=(10,5))
+    ax.plot(data['prices'], label='Price')
+    ax.plot(data['market_caps'], label='Market Cap')
+    ax.plot(data['total_volumes'], label='Total Volume')
+    ax.legend()
+    ax.set_title('Bitcoin Data for the Last 7 Days')
+    ax.set_xlabel('Time')
+    ax.set_ylabel('Value')
+    ax.grid(True)
+    st.pyplot(fig)  # Pass the figure to st.pyplot()
 
 st.title('Bitcoin Price Analyzer')
 st.write('This app uses AI to analyze Bitcoin prices and other metrics.')
