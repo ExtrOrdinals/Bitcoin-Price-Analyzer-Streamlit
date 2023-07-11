@@ -7,20 +7,24 @@ import matplotlib.pyplot as plt
 
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 def get_bitcoin_data():
-    url = "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=7"
+    url = "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=14"
     response = requests.get(url)
     data = response.json()
 
-    # Convert prices, market_caps, and total_volumes to integers
-    for field in ['prices', 'market_caps', 'total_volumes']:
+    # Convert prices and total_volumes to integers
+    for field in ['prices', 'total_volumes']:
         for i in range(len(data[field])):
             data[field][i][1] = int(data[field][i][1])
+
+    # Delete 'market_caps' data
+    if 'market_caps' in data:
+        del data['market_caps']
 
     return data
 
 def analyze_bitcoin_data(data):
     prompt = f"""
-    You are an expert crypto trader with more than 10 years of experience. Here is the Bitcoin data for the last 7 days: 
+    You are an expert crypto trader with more than 10 years of experience. Here is the Bitcoin data for the last 14 days: 
     {data} 
     Please provide a detailed technical analysis of Bitcoin based on this data. Include information on price overview, moving averages, relative strength index (RSI), moving average convergence divergence (MACD), and advice and suggestions. Even if you don't have enough info for the anser, get as close as possible. Should we buy or sell? Please explain in a way that a beginner can understand.
     """
@@ -44,7 +48,7 @@ def plot_bitcoin_data(data):
     fig, ax = plt.subplots(figsize=(10,5))
     ax.plot(dates, prices, label='Price')  # Use dates for x values and prices for y values
     ax.legend()
-    ax.set_title('Bitcoin Data for the Last 7 Days')
+    ax.set_title('Bitcoin Data for the Last 14 Days')
     ax.set_xlabel('Time')
     ax.set_ylabel('Price')
     ax.grid(True)
