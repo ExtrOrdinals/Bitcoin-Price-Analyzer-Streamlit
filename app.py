@@ -11,10 +11,10 @@ def get_bitcoin_data():
     response = requests.get(url)
     data = response.json()
 
-    # Round prices, market_caps, and total_volumes to 2 decimal places
+    # Convert prices, market_caps, and total_volumes to integers
     for field in ['prices', 'market_caps', 'total_volumes']:
         for i in range(len(data[field])):
-            data[field][i][1] = round(data[field][i][1], 2)
+            data[field][i][1] = int(data[field][i][1])
 
     return data
 
