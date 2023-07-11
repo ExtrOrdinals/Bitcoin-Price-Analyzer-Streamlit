@@ -7,19 +7,25 @@ import matplotlib.pyplot as plt
 
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 def get_bitcoin_data():
-    url = "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=7"
+    url = "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=14"
     response = requests.get(url)
     data = response.json()
+
+    # Round prices, market_caps, and total_volumes to 2 decimal places
+    for field in ['prices', 'market_caps', 'total_volumes']:
+        for i in range(len(data[field])):
+            data[field][i][1] = round(data[field][i][1], 2)
+
     return data
 
 def analyze_bitcoin_data(data):
     prompt = f"""
-    You are an expert crypto trader with more than 10 years of experience. Here is the Bitcoin data for the last 7 days: 
+    You are an expert crypto trader with more than 10 years of experience. Here is the Bitcoin data for the last 14 days: 
     {data} 
     Please provide a detailed technical analysis of Bitcoin based on this data. Include information on price overview, moving averages, relative strength index (RSI), moving average convergence divergence (MACD), and advice and suggestions. Even if you don't have enough info for the anser, get as close as possible. Should we buy or sell? Please explain in a way that a beginner can understand.
     """
     response = openai.ChatCompletion.create(
-        model="gpt-3.5-turbo-16k",
+        model="gpt-4",
         messages=[
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": prompt}
