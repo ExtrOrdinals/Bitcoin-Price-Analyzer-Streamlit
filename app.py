@@ -1,84 +1,53 @@
 import openai
-import json
 import requests
 import streamlit as st
+import matplotlib.pyplot as plt
 
-openai.api_key = 'openai_api_key'
+openai.api_key = st.secrets["OPENAI_API_KEY"]
+def get_bitcoin_data():
+    url = "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart?vs_currency=usd&days=7"
+    response = requests.get(url)
+    data = response.json()
+    return data
 
-def BasicGeneration(userPrompt):
-    completion = openai.ChatCompletion.create(
-        model = 'gpt-3.5-turbo',
-        message = [ { 
-                     "role": "user", "content": userPrompt}]
+def analyze_bitcoin_data(data):
+    prompt = f"""
+    You are an expert crypto trader with more than 10 years of experience. Here is the Bitcoin data for the last 7 days:
+    {data}
+    Please provide a detailed technical analysis of Bitcoin based on this data. Include information on price overview, moving averages, relative strength index (RSI), moving average convergence divergence (MACD), and advice and suggestions. Should we buy or sell? Please explain in a way that a beginner can understand.
+    """
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": prompt}
+        ]
     )
-    return completion.choices[0].message.content
+    return response.choices[0].message['content']
 
-#Create user interface
+def plot_bitcoin_data(data):
+    plt.figure(figsize=(10,5))
+    plt.plot(data['prices'], label='Price')
+    plt.plot(data['market_caps'], label='Market Cap')
+    plt.plot(data['total_volumes'], label='Total Volume')
+    plt.legend()
+    plt.title('Bitcoin Data for the Last 7 Days')
+    plt.xlabel('Time')
+    plt.ylabel('Value')
+    plt.grid(True)
+    plt.show()
 
-st.title('ChatGPT Advanced Prompting With Python')
-st.subheader(
-    'Example: Analysing ive Crypto prices'
-)
-
-
-def GetBitCoinPrices():
-    #Define the API endpoint and query parameter
-    url = 'https://coinranking1.p.rapidapi.com/coin/Qwsogvtv82FCd/history'
-    querystring = {
-        'referenceCurrencyUuid': 'yhjMzLPhuIDl',
-        'timePeriod': '7d'
-    }
-
-    #Define the request headers with API key and host
-    headers = {
-        'X-RapidAPI-Key': 'a617d6467dmshac84323ce581a72p11caa9jsn1adf8bbcbd47',
-        'X-RapidAPI-Key': 'coinranking1.p.rapidapi.com'
-    }
-
-    #Send a GET request to the API endpoint with query parameters and headers
-    response = requests.request(
-        'GET', url, headers=headers, params=querystring)
-
-    #Parse the response data as a JSON object
-    JSONResult = json.loads(response.text)
-
-    #Extract the "history" field fro the JSON response
-    history = JSONResult['data']['history']
-
-    #Extract the "price" field from each element in the "history" array and add to a list
-    prices = []
-    for change in history:
-        prices.append(change['price'])
-
-    #Join the list of prices into a comma-separated string
-    priceList = ','.join(prices)
-
-    #Return the comma-separated string of prices
-    return priceList
+st.title('Bitcoin Price Analyzer')
+st.write('This app uses AI to analyze Bitcoin prices and other metrics.')
 
 if st.button('Analyze'):
-    with st.spinner('Getting Bitcoin Prices....'):
-        bitcoinPrices = GetBitCoinPrices()
+    with st.spinner('Getting Bitcoin data...'):
+        data = get_bitcoin_data()
         st.success('Done!')
-    with st.spinner('Analyzing Bitcoin Prices...'):
-        chatGPTPrompt = f"""You are an expert crypto trader with more than 10 years of experience, I will provide you with a list
-                    of bitcoin prices for the last 7 days can you provide me with a technical analysis of Bitcoin based on these prices.
-                    Here is what i want:
-                    Price overview,
-                    Moving Averages,
-                    Relative Strength Index (RSI),
-                    Moving Average Convergence Divergence (MACD),
-                    Advice and Suggestion,
-                    Do I buy or Sell?,
-                    Please be as detailed as much as you can, and explain in way any beginner can understand. And here is the price list:
-                    {bitcoinPrices}"""
-
-
-
-        analysis = BasicGeneration(chatGPTPrompt)
+    with st.spinner('Analyzing Bitcoin data...'):
+        analysis = analyze_bitcoin_data(data)
         st.text_area('Analysis', analysis, height=500)
         st.success('Done!')
-
-
-#How to run the python app
-#[streamlit run app.py] 
+    with st.spinner('Plotting Bitcoin data...'):
+        plot_bitcoin_data(data)
+        st.success('Done!')
