@@ -1,6 +1,7 @@
 import openai
 import requests
 import json
+import datetime
 import streamlit as st
 import matplotlib.pyplot as plt
 
@@ -27,14 +28,22 @@ def analyze_bitcoin_data(data):
     return response.choices[0].message['content']
 
 def plot_bitcoin_data(data):
+    # Separate timestamps and prices
+    timestamps = [item[0] for item in data['prices']]
+    prices = [item[1] for item in data['prices']]
+
+    # Convert timestamps to datetime objects
+    dates = [datetime.datetime.fromtimestamp(ts / 1000) for ts in timestamps]
+
     fig, ax = plt.subplots(figsize=(10,5))
-    ax.plot(data['prices'], label='Price')
+    ax.plot(dates, prices, label='Price')  # Use dates for x values and prices for y values
     ax.legend()
     ax.set_title('Bitcoin Data for the Last 7 Days')
     ax.set_xlabel('Time')
-    ax.set_ylabel('Value')
+    ax.set_ylabel('Price')
     ax.grid(True)
-    st.pyplot(fig)  # Pass the figure to st.pyplot()
+    st.pyplot(fig)
+
 
 st.title('Bitcoin Price Analyzer')
 st.write('This app uses AI to analyze Bitcoin prices and other metrics.')
