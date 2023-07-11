@@ -39,7 +39,6 @@ def plot_bitcoin_data(data):
 
 st.title('Bitcoin Price Analyzer')
 st.write('This app uses AI to analyze Bitcoin prices and other metrics.')
-st.write('Raw Data: ' + data)
 
 
 if st.button('Analyze'):
