@@ -26,7 +26,7 @@ def analyze_bitcoin_data(data):
     prompt = f"""
     You are an expert crypto trader with more than 10 years of experience. Here is the Bitcoin data for the last 14 days: 
     {data} 
-    Please provide a detailed technical analysis of Bitcoin based on this data. Include information on price overview, moving averages, relative strength index (RSI), moving average convergence divergence (MACD), and advice and suggestions. Even if you don't have enough info for the anser, get as close as possible. Should we buy or sell? Please explain in a way that a beginner can understand.
+    Please provide a detailed technical analysis of Bitcoin based on this data. Include information on price overview, relative strength index (RSI), and any other TA you can analyze with advice and suggestions. Even if you don't have enough info for the answer, get as close as possible. Should we buy or sell? Please explain in a way that a beginner can understand. We know NFA no need to say it, don't discuss a topic if you don't have insightful analysis for it. speak as if you are 28 years old, and keep everything short and concise without using too big of a lexicon so even an audience who suffers from ADHD can enjoy it. 
     """
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo-16k",
